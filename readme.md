@@ -43,15 +43,22 @@ Mutexes:(starting value: 1)
 
 Memory is a snapshot of the station. Each bus process, and station manager processes, write on the shared memory. The Comptroller process saves snapshots of the station to the ledger to extract statistics.
 The configuraion file's format is as follows:
-"
+
 1 1 1 #parking_aisles (ASK PEL VOR)
+
 5 6 7 #parking_aisles_capacity_per_type (ASK PEL VOR)
+
 50 #bus_max_capacity
+
 20 #bus_max_period_time_at_aisle
+
 1 #maneuver_time
+
 12 4 #comptroller_intervals(stat_snapshot) (stat snap)
+
 2 2 4 #buses_of_each_type (ASK PEL VOR)
-"
+
+
 The space seperated values in front correspond to the aisle types in brackets(ASK, PEL, VOR).
 
 ******************************************************************
