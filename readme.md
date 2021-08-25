@@ -1,6 +1,7 @@
-Manolas Stamatios           DIT  Operating Systems 2019 Project 3
+Manolas Stamatios
+DIT  Operating Systems 2019 Project 3
 
-#
+
 General:
 
 The execution command is:
@@ -10,7 +11,7 @@ The execution command is:
 
     make clean && make && valgrind -v --leak-check=yes --show-leak-kinds=all --track-origins=yes --trace-children=yes ./mystation -l config.txt -f 2
 
-#Shared Memory Structure:
+Shared Memory Structure:
 
 Class stationDATA contains all semaphores and variables used for the communication between inbound/outbound bus processes. There is an array of aisles (class Bay) with different amount of parking space.
 
@@ -36,7 +37,7 @@ outGoingMutex: it's used to sychronize all exit operations
 bayMutex:it's used to sychronize access on the aisles and the bus parking spots
 coutMutex: it's used to sychronize concurrent prints
 	
-#Notes:
+Notes:
 
 Memory is a snapshot of the station. Each bus process, and station manager processes, write on the shared memory. The Comptroller process saves snapshots of the station to the ledger to extract statistics.
 The configuraion file's format is as follows:
