@@ -1,6 +1,6 @@
 Manolas Stamatios Operating Systems 2019 Project 3
 
-General:
+#General:
 
 The execution command is:
 
@@ -9,7 +9,7 @@ where -f is the bus process creation frequency. The input arguments initialize w
 
     make clean && make && valgrind -v --leak-check=yes --show-leak-kinds=all --track-origins=yes --trace-children=yes ./mystation -l config.txt -f 2
 
-Shared Memory Structure:
+#Shared Memory Structure:
 
 Class stationDATA contains all semaphores and variables used for the communication between inbound/outbound bus processes. There is an array of aisles (class Bay) with different amount of parking space.
 
@@ -35,27 +35,10 @@ outGoingMutex: it's used to sychronize all exit operations
 bayMutex:it's used to sychronize access on the aisles and the bus parking spots
 coutMutex: it's used to sychronize concurrent prints
 	
-Notes:
-	Ουσιαστικά η μνήμη αποτελεί φωτογραφία του σταθμού, και το κάθε λεωφορείο γράφει στη class Bus τα στοιχεία
-του αφού λάβει οδηγία από τον station manager σε ποια θα πάει. Ο comptroller με τη σειρά του παίρνει όλες τις
-πληροφορίες από όλη τη κοινή μνήμη για να φτιάξει το ledger, το οποίο μόνο αυτός χρησιμοποιεί για τα στατιστικά.
-	Είχα υλοποιήσει και λίστα που κρατούσε όλες τις πληφορίες από κάθε εισερχόμενο λεωφορείο, αλλά τη κατέργησα
-(σχολιάζωντας το κώδικα) αφού δε ήταν χρήσιμη σε κάτι.
-	Οι μεταβλητές OUTqueueSize, INqueueSize χρησιμοποιούνται για να ξέρω το μέγεθος της λίστας αφού η συνάρτηση
-sem_getvalue επιστρέφει μόνο μη αρνητικούς αριθμούς.
+#Notes:
 
-
-Ανάπτυξη Κώδικα:
-
-mystation.cpp:
-	Διαβάζει το config αρχείο, και αρχικοποιεί με βάση αυτό τη κοινή μνήμη. Δεν είναι υποχρωτικό να δωθεί σαν όρισμα
-εφόσον όλες οι μεταβλητές έχουν αρχική τιμή. Έπειτα, ξεκινά το station manager, το comptroller και με μία επανάληψη
-ξεκινά τη δημιουργία λεωφορείων, που θα σταματήσει όταν δωθεί εντολή τερματισμού ή αν ξεκινήσουν όσα λεωφορεία έγραφε
-στο config αρχείο. Τυχαία, επιλέγεται τι τύπος λεωφορείου θα ξεκινήσει αν έχει οριστεί στο config. Τυχαία, επίσης
-σε διάστημα f(όρισμα) δευτερολέπτων θα ξεκινήσει κι ένα λεωφορείο. Αφού, με waitpid περιμένει για όλες τις διαδικασίες
-που ξεκίνησε να κλείσουν, διαγράφει και καταστρέφει τη κοινή μνήμη.
-
-Το configuraion file έχει τη μορφή:
+Memory is a snapshot of the station. Each bus process, and station manager processes, write on the shared memory. The Comptroller process saves snapshots of the station to the ledger to extract statistics.
+The configuraion file's format is as follows:
 
 1 1 1 #parking_aisles (ASK PEL VOR)
 5 6 7 #parking_aisles_capacity_per_type (ASK PEL VOR)
@@ -65,7 +48,16 @@ mystation.cpp:
 12 4 #comptroller_intervals(stat_snapshot) (stat snap)
 2 2 4 #buses_of_each_type (ASK PEL VOR)
 
-και οι πολλοί αριθμοί μπροστά αντιστοιχούν στους τύπους των παρενθέσεων(είναι space seperated values).
+The space seperated values in front correspond to the aisle types in brackets(ASK, PEL, VOR).
+
+Ανάπτυξη Κώδικα:
+
+mystation.cpp:
+	Διαβάζει το config αρχείο, και αρχικοποιεί με βάση αυτό τη κοινή μνήμη.  Έπειτα, ξεκινά το station manager, το comptroller και με μία επανάληψη
+ξεκινά τη δημιουργία λεωφορείων, που θα σταματήσει όταν δωθεί εντολή τερματισμού ή αν ξεκινήσουν όσα λεωφορεία έγραφε
+στο config αρχείο. Τυχαία, επιλέγεται τι τύπος λεωφορείου θα ξεκινήσει αν έχει οριστεί στο config. Τυχαία, επίσης
+σε διάστημα f(όρισμα) δευτερολέπτων θα ξεκινήσει κι ένα λεωφορείο. Αφού, με waitpid περιμένει για όλες τις διαδικασίες
+που ξεκίνησε να κλείσουν, διαγράφει και καταστρέφει τη κοινή μνήμη.
 
 station manager.cpp:
 	Κάνει 2 βασικές λειτουργίες. Ελέγχει αν υπάρχει χώρος να μπει λεωφορείο που έχει δηλώσει ενδιαφέρον, με διάλογο που
@@ -75,12 +67,6 @@ station manager.cpp:
 ένα ΠΕΛ λεωφορείο να εισέλθει και δεν υπάρχει ίδιου είδους νησίδα, τότε βλέπει κλειστό το σταθμό. Όλα τα παραπάνω 
 καταγράφονται από τον station manager στο log.txt. Τέλος, όταν έχει έρθει σήμα για τερματισμό και έχει αδειάσει ο
 σταθμός στέλνει σήμα στο comptroller να τελειώσει.
-
-comptroller.cpp:
-	Τυπώνει τη κατάσταση και τα στατιστικά του σταθμού, στα δοσμένα χρονικά διαστήματα. Κάθε φορά τρέχει μία από τις
-δύο λειτουργίες, συλλέγει τα στοιχεία από τα λεωφορεία που έφυγαν πρόσφατα, και όποιο έχει διαβάζεται, αλλάζει τη μεταβλητή
-checked σε αληθής. Όταν λάβει σήμα τερματισμού από το station manager, κάνει ένα τελευταίο έλεγχο και τυπώνει τα συνολικά
-στατιστικά λειτουργίας του σταθμού.
 
 bus.cpp:
 	Περιμένει στην ουρά, μόλις τον ξυπνήσει ο station manager, γράφει τα στοιχεία του στη κοινή μνήμη και περιμένει να
