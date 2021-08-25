@@ -1,22 +1,18 @@
-Μανωλάς Σταμάτιος 1115201400094 Λειτουργικά Συστήματα Εργασία 3η
+Manolas Stamatios Operating Systems 2019 Project 3
 
-Γενικά:
+General:
 
-	Έχω ακολουθήσει τις οδηγίες της εκφώνησης και είδα και κάποιες διορθώσεις που υπήρχαν στο φόρουμ. Το πρόγραμμα 
-τρέχει ως εξής: ./mystation -l config.txt -f 2 όπου το -f είναι η συχνότητα δημιουργίας διεργασιών λεωφορείων. Τα 
-ορίσματα είναι προαιρετικά καθώς όλα έχουν αρχική τιμή. Το πρόγραμμα έχει γραφτεί σε C++. Το compilation γίνεται με 
-την εντολή make, και η make clean σβήνει τα .ο αρχεία και τα εκτελέσιμα. Το αρχείο εξόδου είναι το log.txt στο /IO.
-Επίσης, στο makefile υπάρχει η επιλογή διαγραφής του αρχείου εξόδου από το φάκελο IO/ με την εντολή make cleanOuts.
-Το πρόγραμμα αποδευσμεύει όλη τη μνήμη κανονικά, και το έχω τρέξει αρκετά με valgrind και δε μου βγάζει κανένα 
-πρόβλημα με όλα τα input files. Δοκιμάστηκε, επίσης, και στο linux09 της σχολής και έτρεχε χωρίς θέμα. Ενδεικτικά:
+The execution command is: 
+    ./mystation -l config.txt -f 2 
+where -f is the bus process creation frequency. The input arguments initialize with default values, so they are optional. The project is developed in C++. The compilation is done with the 'make' command, and 'make clean' deletes all executables and .ο files. The output file is IO/log.txt. Also, with the command 'make cleanOuts', there is an option to erase the output file. I also used Valgrind to check for memory leaks with the command:
 make clean && make && valgrind -v --leak-check=yes --show-leak-kinds=all --track-origins=yes --trace-children=yes ./mystation -l config.txt -f 2
 
-Δομή Κοινής Μνήμης:
+Shared Memory Structure:
 	Αρχικά είναι το class stationDATA που περιέχει όλους τους σεμαφόρους, και τις μεταβλητές για την επικοινωνία
 ανάμεσα στο εισερχόμενο/εξερχόμενο λεωφορείο. Έπειτα, είναι ένας πίνακας από νησίδες (class Bay) με διαφορετικό 
 αριθμό από θέσεις παρκαρίσματος λεωφορείων(class Bus), που είναι στο επόμενο κομμάτι μνήμης.
 
-Σεμαφόροι:
+Semaphores:
 
 CommBusWrote, CommStMngrWrote: Για το συχρονισμό επικοινωνίας λεωφορείου-station manager
 	για την είσοδο του λεωφορείου (αρχική τιμή 0)
