@@ -13,32 +13,29 @@ Shared Memory Structure:
 
 Class stationDATA contains all semaphores and variables used for the communication between inbound/outbound bus processes. There is an array of aisles (class Bay) with different amount of parking space.
 
-/******************************************************************
- * MEMORY STRUCTURE
- * ****************************************************************
+ ******************************************************************
  * size of stationDATA
  * totalbays * size of Bay(baysOffSet)
  * total parking slots of each bay * size of Bus(busesOfBaysOffSet)
  * 
-*/
+ ******************************************************************
 
 Semaphores:
 
-CommBusWrote, CommStMngrWrote: Για το συχρονισμό επικοινωνίας λεωφορείου-station manager
-	για την είσοδο του λεωφορείου (αρχική τιμή 0)
-inDriveway: αναπαριστά το δρόμο από την είσοδο μέχρι το πάρκινγκ (αρχική τιμή 1)
-outDriveway: αναπαριστά το δρόμο από το πάρκινγκ μέχρι την έξοδο (αρχική τιμή 1)
-inBoundQueue: αναπαριστά την ουρά για είσοδο
-outGoingQueue: αναπαριστά την ουρά για έξοδο
-OutGoingComm: Για το συχρονισμό επικοινωνίας λεωφορείου-station manager για την έξοδο του λεωφορείου (αρχική τιμή 0)
+CommBusWrote, CommStMngrWrote: Used to synchronize the communication between inbound bus and station manager (starting value: 0)
+inDriveway: depicts the road from the entrance till the parking (starting value: 1)
+outDriveway: depicts the road from the parking till the exit (starting value: 1)
+inBoundQueue: It's a queue for the bus processes waiting to enter the parking.
+outGoingQueue: It's a queue for the bus processes waiting to exit the parking.
+OutGoingComm: Used to synchronize the communication between inbound bus and station manager (starting value: 0)
 
-	Mutexes:(αρχική τιμή 1)
-inBoundMutex: για το συγχρονισμό των λειτουργιών εισόδου(και τις ανάλογες μεταβλητές)
-outGoingMutex: για το συγχρονισμό των λειτουργιών εξόδου(και τις ανάλογες μεταβλητές)
-bayMutex: για το συγχρονισμό πρόσβασης στις νησίδες και τις θέσεις για παρκάρισμα/λεωφορεία
-coutMutex: για το συγχρονισμό μη ταυτόχρονης εκτύπωσης στην οθόνη
+Mutexes:(starting value: 1)
+inBoundMutex: it's used to sychronize all entrace operations
+outGoingMutex: it's used to sychronize all exit operations
+bayMutex:it's used to sychronize access on the aisles and the bus parking spots
+coutMutex: it's used to sychronize concurrent prints
 	
-Σημειώσεις:
+Notes:
 	Ουσιαστικά η μνήμη αποτελεί φωτογραφία του σταθμού, και το κάθε λεωφορείο γράφει στη class Bus τα στοιχεία
 του αφού λάβει οδηγία από τον station manager σε ποια θα πάει. Ο comptroller με τη σειρά του παίρνει όλες τις
 πληροφορίες από όλη τη κοινή μνήμη για να φτιάξει το ledger, το οποίο μόνο αυτός χρησιμοποιεί για τα στατιστικά.
